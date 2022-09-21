@@ -6,8 +6,6 @@ from torch.autograd import Variable
 import ctypes
 import gc
 
-global libc
-libc = ctypes.CDLL("libc.so.6")
 
 class realSystem():
 
@@ -441,8 +439,9 @@ class Att_H(nn.Module):
         M = torch.cat((torch.cat((Mupper11, Mupper21), dim=1), torch.cat((Mupper12, Mupper22), dim=1)), dim=2)
 
         del Mupper11, Mupper12, Mupper21, Mupper22
-        torch.cuda.synchronize()
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
 
         q = x[:, :4, :].transpose(1, 2).reshape(-1, 1, 4 * na)
 
@@ -593,8 +592,9 @@ class learnSystem(nn.Module):
         dx = torch.bmm(J.to(torch.float32) - R.to(torch.float32), dHdx.unsqueeze(2)).squeeze(2)
 
         del dHdx, dHp, dHq, dH, Hgrad, H, inputs_l, J, R
-        torch.cuda.synchronize()
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
 
         return dx[:, :2 * self.na], dx[:, 2 * self.na:]
 
