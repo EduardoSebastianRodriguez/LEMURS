@@ -3,9 +3,7 @@ import matplotlib.pyplot as plt
 from torch import nn
 from torchdiffeq import odeint
 from torch.autograd import Variable
-import ctypes
 import gc
-
 
 class realSystem():
 
@@ -52,7 +50,8 @@ class realSystem():
                 if i != j and L[2 * i, 2 * j] != 0:
                     z_sigma = q_agents[2 * j:2 * j + 2] - q_agents[2 * i:2 * i + 2]
                     if self.sigma_norm(z_sigma) < d_sigma:
-                        grad_V[2 * i:2 * i + 2] -= z_sigma / self.sigma_norm(z_sigma)
+                        n_ij = (q_agents[2 * j:2 * j + 2] - q_agents[2 * i:2 * i + 2]) / (torch.sqrt(1 + self.e * (q_agents[2 * j:2 * j + 2] - q_agents[2 * i:2 * i + 2]).norm(p=2) ** 2))
+                        grad_V[2 * i:2 * i + 2] -= z_sigma / self.sigma_norm(z_sigma) * n_ij
         return grad_V
 
     def flocking_dynamics(self, t, inputs):
@@ -418,11 +417,11 @@ class Att_H(nn.Module):
 
         # Reshape, kronecker and post-processing
         del Q, K, V, o
-        M11 = torch.kron((M[:, :int(self.d/na),   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M12 = torch.kron((M[:, int(self.d/na):2*int(self.d/na),   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M21 = torch.kron((M[:, 2*int(self.d/na):3*int(self.d/na),  :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M22 = torch.kron((M[:, 3*int(self.d/na):4*int(self.d/na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        Mpp = (M[:, 4*int(self.d/na):, :] ** 2).sum(1)
+        M11 = torch.kron((M[:, 0:5, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M12 = torch.kron((M[:, 5:10, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M21 = torch.kron((M[:, 10:15, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M22 = torch.kron((M[:, 15:20, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        Mpp = (M[:, 20:25, :] ** 2).sum(1)
 
         Mupper11 = torch.zeros([x.shape[0], l * na, l * na], device=self.device)
         Mupper12 = torch.zeros([x.shape[0], l * na, l * na], device=self.device)
@@ -478,11 +477,11 @@ class Att_H(nn.Module):
 
         # Reshape, kronecker and post-processing to ensure skew-symmetry
         del o, Q, K, V
-        M11 = torch.kron((M[:, :int(self.d/na),   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M12 = torch.kron((M[:, int(self.d/na):2*int(self.d/na),   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M21 = torch.kron((M[:, 2*int(self.d/na):3*int(self.d/na),  :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M22 = torch.kron((M[:, 3*int(self.d/na):4*int(self.d/na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        Mpp = (M[:, 4*int(self.d/na):, :] ** 2).sum(1)
+        M11 = torch.kron((M[:, 0:5,   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M12 = torch.kron((M[:, 5:10,   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M21 = torch.kron((M[:, 10:15,  :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M22 = torch.kron((M[:, 15:20, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        Mpp = (M[:, 20:25, :] ** 2).sum(1)
         l = int(torch.sqrt(torch.as_tensor(self.h))/2)
 
         Mupper11 = torch.zeros([x.shape[0], l * na, l * na], device=self.device)
@@ -700,7 +699,6 @@ class learnSystem(nn.Module):
             # Free unused memory
             if i % 5 == 0:
                 gc.collect()
-                libc.malloc_trim()
         return outputs_2
 
 class MLP_R(nn.Module):
@@ -829,11 +827,11 @@ class MLP_H(nn.Module):
         na = int(x.shape[1]/torch.as_tensor(6))
         M  = M.reshape(x.shape[0], l * l, na)
 
-        M11 = torch.kron((M[:, :int(self.d/na),   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M12 = torch.kron((M[:, int(self.d/na):2*int(self.d/na),   :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M21 = torch.kron((M[:, 2*int(self.d/na):3*int(self.d/na),  :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M22 = torch.kron((M[:, 3*int(self.d/na):4*int(self.d/na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        Mpp = (M[:, 4*int(self.d/na):, :] ** 2).sum(1)
+        M11 = torch.kron((M[:, 0:5, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M12 = torch.kron((M[:, 5:10, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M21 = torch.kron((M[:, 10:15, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M22 = torch.kron((M[:, 15:20, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        Mpp = (M[:, 20:25, :] ** 2).sum(1)
 
         l = 2
         Mupper11 = torch.zeros([x.shape[0], l * na, l * na], device=self.device)
@@ -949,8 +947,9 @@ class learnSystemMLP(nn.Module):
         dx = torch.bmm(J.to(torch.float32) - R.to(torch.float32), dHdx.unsqueeze(2)).squeeze(2)
 
         del dHdx, dHp, dHq, dH, Hgrad, H, inputs_l, J, R
-        torch.cuda.synchronize()
-        torch.cuda.empty_cache()
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
 
         return dx[:, :2 * self.na], dx[:, 2 * self.na:]
 
@@ -1092,11 +1091,11 @@ class GNN_H(nn.Module):
         na = int(x.shape[1]/torch.as_tensor(6))
         M  = M.reshape(x.shape[0], l * l, na)
 
-        M11 = torch.kron((M[:, :int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M12 = torch.kron((M[:, int(self.d / na):2 * int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M21 = torch.kron((M[:, 2 * int(self.d / na):3 * int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M22 = torch.kron((M[:, 3 * int(self.d / na):4 * int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        Mpp = (M[:, 4 * int(self.d / na):, :] ** 2).sum(1)
+        M11 = torch.kron((M[:, 0:5, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M12 = torch.kron((M[:, 5:10, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M21 = torch.kron((M[:, 10:15, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M22 = torch.kron((M[:, 15:20, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        Mpp = (M[:, 20:25, :] ** 2).sum(1)
 
         l = 2
         Mupper11 = torch.zeros([x.shape[0], l * na, l * na], device=self.device)
@@ -1226,7 +1225,9 @@ class learnSystemGNN(nn.Module):
 
         # Free unused memory
         if torch.cuda.is_available():
+            torch.cuda.synchronize()
             torch.cuda.empty_cache()
+
         return dx[:, :2 * self.na], dx[:, 2 * self.na:]
 
     def leader_dynamics(self, t, inputs):
@@ -1408,11 +1409,11 @@ class GNNSA_H(nn.Module):
         na = int(x.shape[1]/torch.as_tensor(6))
         M  = M.reshape(x.shape[0], l * l, na)
 
-        M11 = torch.kron((M[:, :int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M12 = torch.kron((M[:, int(self.d / na):2 * int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M21 = torch.kron((M[:, 2 * int(self.d / na):3 * int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        M22 = torch.kron((M[:, 3 * int(self.d / na):4 * int(self.d / na), :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
-        Mpp = (M[:, 4 * int(self.d / na):, :] ** 2).sum(1)
+        M11 = torch.kron((M[:, 0:5, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M12 = torch.kron((M[:, 5:10, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M21 = torch.kron((M[:, 10:15, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        M22 = torch.kron((M[:, 15:20, :] ** 2).sum(1), torch.ones(1, 2, device=self.device))
+        Mpp = (M[:, 20:25, :] ** 2).sum(1)
 
         l = 2
         Mupper11 = torch.zeros([x.shape[0], l * na, l * na], device=self.device)
@@ -1548,6 +1549,7 @@ class learnSystemGNNSA(nn.Module):
 
         # Free unused memory
         if torch.cuda.is_available():
+            torch.cuda.synchronize()
             torch.cuda.empty_cache()
 
         return dx[:, :2 * self.na], dx[:, 2 * self.na:]

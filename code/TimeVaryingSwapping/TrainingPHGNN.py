@@ -2,7 +2,7 @@ import torch
 from Functions import learnSystemGNN, L2_loss
 import argparse
 
-def main(numTrain=2000, numTests=400, numSamples=5, seed_data=42, seed_train=42, numAgents=4):
+def main(numTrain=20000, numTests=20000, numSamples=5, seed_data=42, seed_train=42, numAgents=4):
 
     # Set fixed random number seed
     torch.manual_seed(seed_train)
@@ -12,7 +12,7 @@ def main(numTrain=2000, numTests=400, numSamples=5, seed_data=42, seed_train=42,
     step_size       = 0.04
     time            = step_size * numSamples
     simulation_time = torch.linspace(0, time - step_size, numSamples)
-    epochs          = 10000
+    epochs          = 40000
     train_size      = 100
     tests_size      = 100
 
@@ -43,7 +43,7 @@ def main(numTrain=2000, numTests=400, numSamples=5, seed_data=42, seed_train=42,
     # Build evaluation
     inputs_eval   = torch.load('TVS'+str(numAgents)+'_inputsTests_'+str(numTrain)+str(numTests)+str(numSamples)+str(seed_data)+'_.pth').to(device)
     target_eval_2 = torch.load('TVS'+str(numAgents)+'_targetTests_'+str(numTrain)+str(numTests)+str(numSamples)+str(seed_data)+'_.pth').to(device)
-    current       = 100000000.0
+    current       = 1e25
     chosen        = torch.randperm(numTrain)[:train_size]
 
     # Log train and evaluation loss

@@ -3,7 +3,7 @@ import argparse
 from Functions import realSystem, generate_leader, generate_agents
 
 
-def main(numTrain=1000, numTests=200, numSamples=5, seed=42, numAgents=4):
+def main(numTrain=20000, numTests=20000, numSamples=5, seed=42, numAgents=4):
 
     # Set seed
     torch.manual_seed(seed)

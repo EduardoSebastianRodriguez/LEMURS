@@ -1,15 +1,12 @@
 from Functions import realSystem, generate_leader, learnSystem, generate_agents_test
 import matplotlib.pyplot as plt
 import torch
-import os
 import numpy as np
 import argparse
 
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
-
 plt.close('all')
 
-def main(seed=42, numAgentsTrain=4, numAgentsTests=4, numTests=20, draw=False):
+def main(seed=42, numAgentsTrain=4, numAgentsTests=4, numTests=20, draw=0, seed_train=42):
 
     # Set seed
     torch.manual_seed(seed)
@@ -33,12 +30,12 @@ def main(seed=42, numAgentsTrain=4, numAgentsTests=4, numTests=20, draw=False):
     c2 = torch.as_tensor(0.8)  # Tracking gain 2
     device = 'cpu'
 
-    parameters = {"na": na, "d": d, "r": r, "e": e, "a": a, "b": b, "c": c, "ha": ha, "c1": c1, "c2": c2}
+    parameters = {"na": na, "d": d, "r": r, "e": e, "a": a, "b": b, "c": c, "ha": ha, "c1": c1, "c2": c2, "device": device}
 
     # Initialize the system to learn
     real_system       = realSystem(parameters)
     learned_system    = learnSystem(parameters)
-    learned_system.load_state_dict(torch.load('F'+str(numAgentsTrain)+'_learn_system_LEMURS.pth', map_location=device))
+    learned_system.load_state_dict(torch.load('F'+str(numAgentsTrain)+'_'+str(seed_train)+'_learn_system_LEMURS.pth', map_location=device))
     with torch.inference_mode():
         learned_system.eval()
     learned_system.na = na
@@ -92,7 +89,7 @@ def main(seed=42, numAgentsTrain=4, numAgentsTests=4, numTests=20, draw=False):
                 for j in range(i + 1, na):
                     if laplacian[i, j] != 0:
                         ax.plot([trajectory_learned[-1, 2 * i], trajectory_learned[-1, 2 * j]],
-                                [trajectory_learned[-1, 2 * i + 1], trajectory_learned[-1, 2 * j + 1]], 'b', linewidth=3)
+                                [trajectory_learned[-1, 2 * i + 1], trajectory_learned[-1, 2 * j + 1]], 'b', linewidth=3.0)
             for i in range(na):
                 ax.plot(trajectory_learned[:, 2 * i], trajectory_learned[:, 2 * i + 1], 'k')
                 ax.plot(trajectory_learned[0, 2 * i], trajectory_learned[0, 2 * i + 1], 'go', markersize=14)
@@ -110,6 +107,8 @@ def main(seed=42, numAgentsTrain=4, numAgentsTests=4, numTests=20, draw=False):
     print('Loss is of mean %.12f and std %.12f' % (loss_mean, loss_std))
     np.save('F_mean' + str(numAgentsTrain) + str(numAgentsTests) + '_loss_LEMURS.npy', loss_mean)
     np.save('F_std' + str(numAgentsTrain) + str(numAgentsTests) + '_loss_LEMURS.npy', loss_std)
+    np.save('F_trajectory_real' + str(numAgentsTrain) + str(numAgentsTests) + '_LEMURS.npy', trajectory_real)
+    np.save('F_trajectory_learned' + str(numAgentsTrain) + str(numAgentsTests) + '_LEMURS.npy', trajectory_learned)
 
 
 if __name__ == '__main__':
@@ -119,5 +118,6 @@ if __name__ == '__main__':
     parser.add_argument('--numAgentsTests', type=int, nargs=1, help='number of agents')
     parser.add_argument('--numTests', type=int, nargs=1, help='number of tests')
     parser.add_argument('--draw', type=int, nargs=1, help='do you want to display the trajectories? --- 1 is True, 0 is False')
+    parser.add_argument('--seed_train', type=int, nargs=1, help='seed used in training')
     args = parser.parse_args()
-    main(args.seed[0], args.numAgentsTrain[0], args.numAgentsTests[0], args.numTests[0], args.draw[0])
+    main(args.seed[0], args.numAgentsTrain[0], args.numAgentsTests[0], args.numTests[0], args.draw[0], args.seed_train[0])

@@ -15,7 +15,7 @@ for i in range(len(agentsTrain)):
 
 for i in range(len(agentsTrain)):
     for j in range(len(agentsTests)):
-        os.system("python Evaluation.py --seed 42 --numAgentsTrain "+str(agentsTrain[i])+" --numAgentsTests "+str(agentsTests[j])+" --numTests "+str(numTests)+" --draw 0")
+        os.system("python Evaluation.py --seed 42 --numAgentsTrain "+str(agentsTrain[i])+" --numAgentsTests "+str(agentsTests[j])+" --numTests "+str(numTests)+" --draw 0 --seed_train 42")
 
 losses = np.zeros([len(agentsTrain), len(agentsTests), 2])
 for i in range(len(agentsTrain)):
