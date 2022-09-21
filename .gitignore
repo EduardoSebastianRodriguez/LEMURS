@@ -1,0 +1,3 @@
+*.pth
+*.npy
+ code/FixedSwapping/__pycache__/
