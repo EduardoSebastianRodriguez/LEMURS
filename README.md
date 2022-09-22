@@ -1,6 +1,6 @@
 # LEMURS: LEarning distributed MUlti-Robot interactionS
 
-This repo provides the code for our paper "LEMURS: Learning Distributed Multi-robot Interactions". Please check out our project website for more details: https://eduardosebastianrodriguez.github.io/LEMURS/.
+This repository provides the code for our paper "LEMURS: Learning Distributed Multi-robot Interactions". Please check out our project website for more details: https://eduardosebastianrodriguez.github.io/LEMURS/.
 
 ## Dependencies
 
