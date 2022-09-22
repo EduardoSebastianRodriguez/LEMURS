@@ -18,8 +18,8 @@ Our code is tested with Ubuntu 20.04 and Python 3.8. It depends on the following
 Run ```python ./FixedSwapping/Demo.py``` to check the learned control policy for the fixed swapping problem. It uses the pretrained model stored in ``` ./FixedSwapping/FS4_42_learn_system_LEMURS.pth ```
 
 <p float="left">
-<img src="figs/FixedSwapping64.png" height="300">
-<img src="figs/FS_animation412.gif" height="300"> 
+<img src="figs/FS_animation412.gif" height="200">
+<img src="figs/FS_animation464.gif" height="200"> 
 </p>
 
 To generate the training and evaluation datasets, run ```python ./FixedSwapping/DatasetGenerator.py```, choosing the following arguments as you prefer:
@@ -54,11 +54,11 @@ The files ```python ./FixedSwapping/Evaluation.py```, ```python ./FixedSwapping/
 Regarding ```python ./FixedSwapping/Evaluation.py```, choose the arguments according to the ones used for generating the datasets and training the models.
 
 ## Demo with time-varying swapping problem
-Run ```python ./TimeVaryingSwapping/Demo.py``` to check the learned control policy for the fixed swapping problem. It uses the pretrained model stored in ``` ./TimeVaryingSwapping/FS4_42_learn_system_LEMURS.pth ```
+Run ```python ./TimeVaryingSwapping/Demo.py``` to check the learned control policy for the time-varying swapping problem. It uses the pretrained model stored in ``` ./TimeVaryingSwapping/FS4_42_learn_system_LEMURS.pth ```
 
 <p float="left">
-<img src="figs/TimeVaryingSwapping64.png" height="300">
-<img src="figs/TVSS_animation412.gif" height="300"> 
+<img src="figs/TVSS_animation412.gif" height="300">
+<img src="figs/TVSS_animation464.gif" height="300"> 
 </p>
 
 To generate the training and evaluation datasets, run ```python ./TimeVaryingSwapping/DatasetGenerator.py```, choosing the following arguments as you prefer:
@@ -93,11 +93,11 @@ The files ```python ./TimeVaryingSwapping/Evaluation.py```, ```python ./TimeVary
 Regarding ```python ./TimeVaryingSwapping/Evaluation.py```, choose the arguments according to the ones used for generating the datasets and training the models.
 
 ## Demo with flocking problem
-Run ```python ./Flocking/Demo.py``` to check the learned control policy for the fixed swapping problem. It uses the pretrained model stored in ``` ./Flocking/FS4_42_learn_system_LEMURS.pth ```
+Run ```python ./Flocking/Demo.py``` to check the learned control policy for the flocking problem. It uses the pretrained model stored in ``` ./Flocking/FS4_42_learn_system_LEMURS.pth ```
 
 <p float="left">
-<img src="figs/Flocking64.png" height="300">
-<img src="figs/F_animation412.gif" height="300"> 
+<img src="figs/F_animation412.gif" height="300">
+<img src="figs/F_animation464.gif" height="300"> 
 </p>
 
 To generate the training and evaluation datasets, run ```python ./Flocking/DatasetGenerator.py```, choosing the following arguments as you prefer:
