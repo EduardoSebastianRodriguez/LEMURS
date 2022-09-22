@@ -57,8 +57,8 @@ Regarding ```python ./FixedSwapping/Evaluation.py```, choose the arguments accor
 Run ```python ./TimeVaryingSwapping/Demo.py``` to check the learned control policy for the time-varying swapping problem. It uses the pretrained model stored in ``` ./TimeVaryingSwapping/FS4_42_learn_system_LEMURS.pth ```
 
 <p float="left">
-<img src="figs/TVSS_animation412.gif" height="300">
-<img src="figs/TVSS_animation464.gif" height="300"> 
+<img src="figs/TVSS_animation412.gif" height="200">
+<img src="figs/TVSS_animation464.gif" height="200"> 
 </p>
 
 To generate the training and evaluation datasets, run ```python ./TimeVaryingSwapping/DatasetGenerator.py```, choosing the following arguments as you prefer:
@@ -96,8 +96,8 @@ Regarding ```python ./TimeVaryingSwapping/Evaluation.py```, choose the arguments
 Run ```python ./Flocking/Demo.py``` to check the learned control policy for the flocking problem. It uses the pretrained model stored in ``` ./Flocking/FS4_42_learn_system_LEMURS.pth ```
 
 <p float="left">
-<img src="figs/F_animation412.gif" height="300">
-<img src="figs/F_animation464.gif" height="300"> 
+<img src="figs/F_animation412.gif" height="200">
+<img src="figs/F_animation464.gif" height="200"> 
 </p>
 
 To generate the training and evaluation datasets, run ```python ./Flocking/DatasetGenerator.py```, choosing the following arguments as you prefer:
