@@ -135,13 +135,13 @@ Regarding ```python ./Flocking/Evaluation.py```, choose the arguments according 
 ## Citation
 If you find our papers/code useful for your research, please cite our work as follows.
 
-E. Sebastian, T. Duong, N. Atanasov, E. Montijano, C. Sagues. [LEMURS: Learning Distributed Multi-robot Interactions](https://eduardosebastianrodriguez.github.io/LEMURS/). Under review, IEEE ICRA 2023
+E. Sebastian, T. Duong, N. Atanasov, E. Montijano, C. Sagues. [LEMURS: Learning Distributed Multi-robot Interactions](https://eduardosebastianrodriguez.github.io/LEMURS/). IEEE ICRA 2023
 
  ```bibtex
 @article{sebastian22LEMURS,
 author = {Eduardo Sebasti\'{a}n AND Thai Duong AND Nikolay Atanasov AND Eduardo Montijano AND Carlos Sag\"{u}\'{e}s},
 title = {{LEMURS: Learning Distributed Multi-robot Interactions}},
-journal = {arXiv preprint arXiv:2209.09702},
-year = {2022}
+journal = {IEEE International Conference on Robotics and Automation},
+year = {2023}
 }
 ```
