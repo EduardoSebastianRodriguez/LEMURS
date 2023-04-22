@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ccc0f24b-3414-4a2f-839d-aa84a17dcdde" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/LEMURS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LEMURS.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
